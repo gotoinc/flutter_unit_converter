@@ -3,6 +3,16 @@ import 'package:unit_converter/style/style.dart';
 import 'package:unit_converter/widget/dropdown_border.dart';
 
 class InputSection extends StatelessWidget {
+  final TextEditingController _textController = TextEditingController();
+
+  String getInputtedText() {
+    return _textController.text;
+  }
+
+  void setTextToTextField(String newText) {
+    _textController.text = newText;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -12,6 +22,7 @@ class InputSection extends StatelessWidget {
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.go,
             style: defaultTextStyle(),
+            controller: _textController,
             decoration: InputDecoration(
                 hintText: "Value",
                 labelText: "Input Value",
