@@ -21,16 +21,20 @@ class ConverterGroup extends StatelessWidget {
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(1))),
 //                  TODO: change ripple figure from circle to square
-                  child: IconButton(
-                      icon: Icon(Icons.compare_arrows, color: Colors.white),
-                      color: Colors.white,
-                      iconSize: 24,
+                  child: InkWell(
                       highlightColor: Colors.greenAccent.shade400,
-                      onPressed: () {
+                      splashColor: Colors.white70,
+                      borderRadius: BorderRadius.all(Radius.zero),
+                      onTap: () {
                         String temp = inputWidget.getInputtedText();
-                        inputWidget.setTextToTextField(outputWidget.getInputtedText());
+                        inputWidget
+                            .setTextToTextField(outputWidget.getInputtedText());
                         outputWidget.setTextToTextField(temp);
-                      })))),
+                      },
+                      child: Padding(
+                          padding: EdgeInsets.all(12),
+                          child: Icon(Icons.compare_arrows,
+                              color: Colors.white, size: 24)))))),
       outputWidget
     ]));
   }
