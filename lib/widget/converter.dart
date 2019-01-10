@@ -7,34 +7,65 @@ class ConverterGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Column(children: <Widget>[
-      inputWidget,
-      Center(
-          child: RotatedBox(
-              quarterTurns: 1,
-              child: DecoratedBox(
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(1))),
-                  child: InkWell(
-                      highlightColor: Colors.greenAccent.shade400,
-                      splashColor: Colors.white70,
-                      borderRadius: BorderRadius.all(Radius.zero),
-                      onTap: () {
-                        String temp = inputWidget.getInputtedText();
-                        inputWidget
-                            .setTextToTextField(outputWidget.getInputtedText());
-                        outputWidget.setTextToTextField(temp);
-                      },
-                      child: Padding(
-                          padding: EdgeInsets.all(12),
-                          child: Icon(Icons.compare_arrows,
-                              color: Colors.white, size: 24)))))),
-      outputWidget
-    ]));
+    return Container(child: OrientationBuilder(builder: (context, orientation) {
+      return _getRootWidget(orientation);
+    }));
+  }
+
+  Widget _getRootWidget(Orientation orientation) {
+    return orientation == Orientation.landscape
+        ? IntrinsicHeight(child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
+            Expanded(child: inputWidget),
+            DecoratedBox(
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(1))),
+                child: InkWell(
+                    highlightColor: Colors.greenAccent.shade400,
+                    splashColor: Colors.white70,
+                    borderRadius: BorderRadius.all(Radius.zero),
+                    onTap: () {
+                      String temp = inputWidget.getInputtedText();
+                      inputWidget
+                          .setTextToTextField(outputWidget.getInputtedText());
+                      outputWidget.setTextToTextField(temp);
+                    },
+                    child: Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Icon(Icons.compare_arrows,
+                            color: Colors.white, size: 24)))),
+            Expanded(child: outputWidget)
+          ]))
+        : Column(children: <Widget>[
+            inputWidget,
+            Center(
+                child: RotatedBox(
+                    quarterTurns: 1,
+                    child: DecoratedBox(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.white,
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(1))),
+                        child: InkWell(
+                            highlightColor: Colors.greenAccent.shade400,
+                            splashColor: Colors.white70,
+                            borderRadius: BorderRadius.all(Radius.zero),
+                            onTap: () {
+                              String temp = inputWidget.getInputtedText();
+                              inputWidget.setTextToTextField(
+                                  outputWidget.getInputtedText());
+                              outputWidget.setTextToTextField(temp);
+                            },
+                            child: Padding(
+                                padding: EdgeInsets.all(12),
+                                child: Icon(Icons.compare_arrows,
+                                    color: Colors.white, size: 24)))))),
+            outputWidget
+          ]);
   }
 }
