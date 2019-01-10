@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:unit_converter/data/data.dart';
 import 'package:unit_converter/style/style.dart';
-
-class Unit {
-  const Unit(this.id, this.name);
-
-  final int id;
-  final String name;
-}
-
-List<Unit> units = <Unit>[const Unit(1, "Unit 1"), const Unit(2, "Unit 2"), const Unit(3, "Unit 3"), const Unit(4, "Unit 4")];
 
 BoxDecoration _get(Color borderColor, double width, double radius) {
   return BoxDecoration(
@@ -38,9 +30,12 @@ class _DropdownBorderState extends State<DropdownBorder> {
   final double width;
   final double radius;
 
-  Unit _selectedUnit = units.elementAt(0);
+  final List<Unit> _units = getUnits();
+  Unit _selectedUnit;
 
-  _DropdownBorderState(this.borderColor, this.width, this.radius);
+  _DropdownBorderState(this.borderColor, this.width, this.radius) {
+    this._selectedUnit = _units.elementAt(0);
+  }
 
   void _update(Unit unit) {
     setState(() {
@@ -62,7 +57,7 @@ class _DropdownBorderState extends State<DropdownBorder> {
                     child: DropdownButton<Unit>(
                         style: defaultTextStyle(),
                         value: _selectedUnit,
-                        items: units.map((Unit unit) {
+                        items: _units.map((Unit unit) {
                           return DropdownMenuItem<Unit>(
                               value: unit,
                               child: Container(

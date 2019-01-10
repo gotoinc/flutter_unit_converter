@@ -20,7 +20,6 @@ class ConverterGroup extends StatelessWidget {
                         width: 1,
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(1))),
-//                  TODO: change ripple figure from circle to square
                   child: InkWell(
                       highlightColor: Colors.greenAccent.shade400,
                       splashColor: Colors.white70,
