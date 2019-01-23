@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:unit_converter/data/data.dart';
+import 'package:unit_converter/data/model/data.dart';
+import 'package:unit_converter/style/consts/colors.dart';
+import 'package:unit_converter/style/consts/dimensions.dart';
 import 'package:unit_converter/style/style.dart';
 
 class ItemCategory extends StatelessWidget {
@@ -10,24 +12,29 @@ class ItemCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 80,
-        child: Padding(
-            padding: EdgeInsets.all(8),
+        child: IntrinsicHeight(child: Padding(
+            padding: EdgeInsets.symmetric(
+                vertical: listItemSpace),
             child: InkWell(
-                highlightColor: Colors.greenAccent.shade400,
-                splashColor: Colors.white70,
-                borderRadius: BorderRadius.all(Radius.circular(4)),
-                onTap: () {Navigator.of(context).pop(field);},
+                highlightColor: colorHighlight,
+                splashColor: colorHighlightSplash,
+                borderRadius:
+                    BorderRadius.all(Radius.circular(listItemPressRadius)),
+                onTap: () {
+                  Navigator.of(context).pop(field);
+                },
                 child: Padding(
-                    padding: EdgeInsets.all(8),
+                    padding: EdgeInsets.all(listItemPadding),
                     child: Row(children: <Widget>[
-                      Icon(Icons.backup, color: Colors.white, size: 48),
+                      Icon(Icons.backup,
+                          color: textColor, size: icCategorySize),
                       Center(
                           child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 12),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: defaultPadding),
                               child: Text(field.title,
                                   style: defaultTextStyle(),
                                   textAlign: TextAlign.center)))
-                    ])))));
+                    ]))))));
   }
 }

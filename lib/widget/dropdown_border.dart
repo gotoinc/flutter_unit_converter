@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:unit_converter/data/data.dart';
+import 'package:unit_converter/data/model/data.dart';
+import 'package:unit_converter/style/consts/dimensions.dart';
 import 'package:unit_converter/style/style.dart';
-
-BoxDecoration _get(Color borderColor, double width, double radius) {
-  return BoxDecoration(
-      border: Border.all(
-        color: borderColor,
-        width: width,
-      ),
-      borderRadius: BorderRadius.all(Radius.circular(radius)));
-}
 
 class DropdownBorder extends StatefulWidget {
   final Color borderColor;
@@ -47,31 +39,36 @@ class _DropdownBorderState extends State<DropdownBorder> {
   Widget build(BuildContext context) {
     return Container(
         decoration: _get(borderColor, width, radius),
-        child: Theme(
-            data: ThemeData(
-                canvasColor: Colors.greenAccent.shade400,
-                brightness: Brightness.dark),
-            child: DropdownButtonHideUnderline(
-                child: ButtonTheme(
-                    alignedDropdown: true,
-                    child: DropdownButton<Unit>(
-                        style: defaultTextStyle(),
-                        value: _selectedUnit,
-                        items: _units.map((Unit unit) {
-                          return DropdownMenuItem<Unit>(
-                              value: unit,
-                              child: Container(
-                                  child: Text(
-                                unit.name,
-                                softWrap: true,
-                              )));
-                        }).toList(),
-                        isDense: false,
-                        isExpanded: true,
-                        onChanged: (Unit unit) {
-                          _update(unit);
-                        },
-                        elevation: 16,
-                        iconSize: 44)))));
+        child: DropdownButtonHideUnderline(
+            child: ButtonTheme(
+                alignedDropdown: true,
+                child: DropdownButton<Unit>(
+                    style: defaultTextStyle(),
+                    value: _selectedUnit,
+                    items: _units.map((Unit unit) {
+                      return DropdownMenuItem<Unit>(
+                          value: unit,
+                          child: Container(
+                              child: Text(
+                            unit.name,
+                            softWrap: true,
+                          )));
+                    }).toList(),
+                    isDense: false,
+                    isExpanded: true,
+                    onChanged: (Unit unit) {
+                      _update(unit);
+                    },
+                    elevation: dropDownUnitElevation,
+                    iconSize: icDropDownSize))));
+  }
+
+  BoxDecoration _get(Color borderColor, double width, double radius) {
+    return BoxDecoration(
+        border: Border.all(
+          color: borderColor,
+          width: width,
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(radius)));
   }
 }

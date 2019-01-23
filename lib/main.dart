@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:unit_converter/route/unit_converter_route.dart';
+import 'package:unit_converter/style/consts/colors.dart';
 
 void main() => runApp(Application());
 
@@ -9,10 +10,12 @@ class Application extends StatelessWidget {
     return MaterialApp(
         title: 'Unit Converter',
         theme: ThemeData(
-            primaryColor: Colors.greenAccent,
-            scaffoldBackgroundColor: Colors.greenAccent,
-            accentColor: Colors.white,
-            cursorColor: Colors.white),
+            primaryColor: mainColorApp,
+            scaffoldBackgroundColor: mainColorApp,
+            highlightColor: colorHighlight,
+            splashColor: colorHighlightSplash,
+            accentColor: textColor,
+            cursorColor: cursorColor),
         home: UnitConverterScreen());
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:unit_converter/style/consts/colors.dart';
+import 'package:unit_converter/style/consts/dimensions.dart';
 import 'package:unit_converter/style/style.dart';
 import 'package:unit_converter/widget/dropdown_border.dart';
 
@@ -16,11 +18,11 @@ class InputSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(defaultPadding),
         child: Column(children: <Widget>[
           TextField(
             keyboardType: TextInputType.number,
-            textInputAction: TextInputAction.go,
+            textInputAction: TextInputAction.done,
             style: defaultTextStyle(),
             controller: _textController,
             decoration: InputDecoration(
@@ -28,22 +30,23 @@ class InputSection extends StatelessWidget {
                 labelText: "Input Value",
                 labelStyle: defaultLabelTextStyle(),
                 hintStyle: defaultHintTextStyle(),
-                contentPadding: EdgeInsets.all(16),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(4),
-                    borderSide: BorderSide(color: Colors.white, width: 1)),
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(4),
-                    borderSide: BorderSide(color: Colors.white, width: 1)),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(4),
-                    borderSide: BorderSide(color: Colors.white, width: 2)),
-                disabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(4),
-                    borderSide: BorderSide(color: Colors.white54, width: 1))),
+                contentPadding: EdgeInsets.all(defaultPadding),
+                border: _get(borderWidthDefault, textColor),
+                enabledBorder:
+                    _get(borderWidthDefault, textColor),
+                focusedBorder:
+                    _get(borderWidthFocused, textColor),
+                disabledBorder: _get(
+                    borderWidthDefault, textColorDisabled)),
           ),
-          SizedBox(height: 16),
-          DropdownBorder(borderColor: Colors.white, width: 1, radius: 4)
+          SizedBox(height: defaultPadding),
+          DropdownBorder(borderColor: textColor, width: borderWidthDefault, radius: inputFieldRadius)
         ]));
+  }
+
+  OutlineInputBorder _get(double borderWidth, Color borderColor) {
+    return OutlineInputBorder(
+        borderRadius: BorderRadius.circular(inputFieldRadius),
+        borderSide: BorderSide(color: borderColor, width: borderWidth));
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:unit_converter/data/data.dart';
+import 'package:unit_converter/data/model/data.dart';
 import 'package:unit_converter/widget/item_category.dart';
 
 class CategoriesGroup extends StatelessWidget {
@@ -9,7 +9,6 @@ class CategoriesGroup extends StatelessWidget {
   Widget build(BuildContext context) {
     return OrientationBuilder(builder: (context, orientation) {
       final double childAspectRatio = MediaQuery.of(context).size.height / 80;
-      print("Child aspect ratio: $childAspectRatio");
       return _getRootWidget(childAspectRatio, orientation);
     });
   }
