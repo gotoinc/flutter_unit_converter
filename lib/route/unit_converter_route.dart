@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:unit_converter/data/model/data.dart';
 import 'package:unit_converter/route/categories_route.dart';
 import 'package:unit_converter/style/consts/colors.dart';
-import 'package:unit_converter/style/consts/dimensions.dart';
+import 'package:unit_converter/style/style.dart';
 import 'package:unit_converter/widget/converter.dart';
 
-String appBarTitle = "Unit Converter";
+Unit selectedUnit = getUnits().elementAt(0);
+String appBarTitle = selectedUnit.name;
 
 class UnitConverterScreen extends StatelessWidget {
+  final _body = UnitConverterGroup();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,13 +22,12 @@ class UnitConverterScreen extends StatelessWidget {
           centerTitle: true,
           elevation: 0,
         ),
-        body: UnitConverterGroup());
+        body: _body);
   }
 
   void _navigateToCategories(BuildContext context) async {
-    final Field result = await Navigator.of(context).push(MaterialPageRoute(builder: ((context) => CategoriesScreen())));
-    if(result != null)
-      appBarTitle = result.title;
+    selectedUnit = await Navigator.of(context).push(MaterialPageRoute(builder: ((context) => CategoriesScreen())));
+    _body.set(selectedUnit.designations);
   }
 }
 
@@ -40,10 +42,7 @@ class _AppBarTitleState extends State<_AppBarTitle> {
   @override
   Widget build(BuildContext context) {
     return Text(appBarTitle.toUpperCase(),
-        style: TextStyle(
-            fontSize: textSize3,
-            color: textColor,
-            fontWeight: FontWeight.normal));
+        style: appBarTitleTextStyle());
   }
 
 }

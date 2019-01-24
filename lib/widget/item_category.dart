@@ -5,9 +5,9 @@ import 'package:unit_converter/style/consts/dimensions.dart';
 import 'package:unit_converter/style/style.dart';
 
 class ItemCategory extends StatelessWidget {
-  final Field field;
+  final Unit unit;
 
-  const ItemCategory({Key key, this.field}) : super(key: key);
+  const ItemCategory({Key key, this.unit}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,18 +21,18 @@ class ItemCategory extends StatelessWidget {
                 borderRadius:
                     BorderRadius.all(Radius.circular(listItemPressRadius)),
                 onTap: () {
-                  Navigator.of(context).pop(field);
+                  Navigator.of(context).pop(unit);
                 },
                 child: Padding(
                     padding: EdgeInsets.all(listItemPadding),
                     child: Row(children: <Widget>[
-                      Icon(Icons.backup,
+                      Icon(Icons.backspace,
                           color: textColor, size: icCategorySize),
                       Center(
                           child: Padding(
                               padding: EdgeInsets.symmetric(
                                   horizontal: defaultPadding),
-                              child: Text(field.title,
+                              child: Text(unit.name,
                                   style: defaultTextStyle(),
                                   textAlign: TextAlign.center)))
                     ]))))));

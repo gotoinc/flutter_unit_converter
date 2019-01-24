@@ -28,3 +28,4 @@ const double textSize4 = 18.0;
 const double textSize5 = 14.0;
 const double textSize6 = 12.0;
 const double letterSpacing = 0.15;
+const double letterSpacingAppBarTitle = -0.59;

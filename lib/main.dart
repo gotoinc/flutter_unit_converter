@@ -8,7 +8,6 @@ class Application extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Unit Converter',
         theme: ThemeData(
 //            fontFamily: "Raleway",
 //            textTheme: Theme.of(context).textTheme.apply(bodyColor: textColor, displayColor: textColor),

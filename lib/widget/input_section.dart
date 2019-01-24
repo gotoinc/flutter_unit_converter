@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:unit_converter/style/consts/colors.dart';
 import 'package:unit_converter/style/consts/dimensions.dart';
 import 'package:unit_converter/style/style.dart';
+import 'package:unit_converter/widget/converter.dart';
 import 'package:unit_converter/widget/dropdown_border.dart';
 
 class InputSection extends StatelessWidget {
@@ -51,7 +52,8 @@ class InputSection extends StatelessWidget {
               DropdownBorder(
                   borderColor: textColor,
                   width: borderWidthDefault,
-                  radius: inputFieldRadius)
+                  radius: inputFieldRadius,
+                  designations: designations)
             ])));
   }
 

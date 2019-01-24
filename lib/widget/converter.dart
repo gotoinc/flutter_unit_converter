@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:unit_converter/data/model/data.dart';
 import 'package:unit_converter/style/consts/colors.dart';
 import 'package:unit_converter/style/consts/dimensions.dart';
 import 'package:unit_converter/widget/input_section.dart';
 
-class UnitConverterGroup extends StatelessWidget {
+List<Designation> designations;
+
+class UnitConverterGroup extends StatefulWidget {
+  set (List<Designation> designations) => designations = designations;
+
+  @override
+  State<StatefulWidget> createState() {
+    return _UnitConverterGroupState();
+  }
+}
+
+class _UnitConverterGroupState extends State<UnitConverterGroup> {
   final inputWidget = InputSection();
   final outputWidget = InputSection();
 

@@ -4,34 +4,35 @@ import 'package:unit_converter/style/consts/dimensions.dart';
 import 'package:unit_converter/style/style.dart';
 
 class DropdownBorder extends StatefulWidget {
+  final List<Designation> designations;
   final Color borderColor;
   final double width;
   final double radius;
 
-  const DropdownBorder({Key key, this.borderColor, this.width, this.radius})
+  const DropdownBorder({Key key, this.borderColor, this.width, this.radius, @required this.designations})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _DropdownBorderState(borderColor, width, radius);
+    return _DropdownBorderState(borderColor, width, radius, designations);
   }
 }
 
 class _DropdownBorderState extends State<DropdownBorder> {
+  final List<Designation> designations;
   final Color borderColor;
   final double width;
   final double radius;
 
-  final List<Unit> _units = getUnits();
-  Unit _selectedUnit;
+  Designation _selectedDesignation;
 
-  _DropdownBorderState(this.borderColor, this.width, this.radius) {
-    this._selectedUnit = _units.elementAt(0);
+  _DropdownBorderState(this.borderColor, this.width, this.radius, this.designations) {
+    this._selectedDesignation = designations.elementAt(0);
   }
 
-  void _update(Unit unit) {
+  void _update(Designation designation) {
     setState(() {
-      _selectedUnit = unit;
+      _selectedDesignation = designation;
     });
   }
 
@@ -42,22 +43,22 @@ class _DropdownBorderState extends State<DropdownBorder> {
         child: DropdownButtonHideUnderline(
             child: ButtonTheme(
                 alignedDropdown: true,
-                child: DropdownButton<Unit>(
+                child: DropdownButton<Designation>(
                     style: defaultTextStyle(),
-                    value: _selectedUnit,
-                    items: _units.map((Unit unit) {
-                      return DropdownMenuItem<Unit>(
-                          value: unit,
+                    value: _selectedDesignation,
+                    items: designations.map((Designation d) {
+                      return DropdownMenuItem<Designation>(
+                          value: d,
                           child: Container(
                               child: Text(
-                            unit.name,
+                                d.title,
                             softWrap: true,
                           )));
                     }).toList(),
                     isDense: false,
                     isExpanded: true,
-                    onChanged: (Unit unit) {
-                      _update(unit);
+                    onChanged: (Designation d) {
+                      _update(d);
                     },
                     elevation: dropDownUnitElevation,
                     iconSize: icDropDownSize))));
