@@ -19,7 +19,7 @@ class UnitConverterScreen extends StatelessWidget {
           centerTitle: true,
           elevation: 0,
         ),
-        body: ConverterGroup());
+        body: UnitConverterGroup());
   }
 
   void _navigateToCategories(BuildContext context) async {

@@ -10,12 +10,16 @@ class Application extends StatelessWidget {
     return MaterialApp(
         title: 'Unit Converter',
         theme: ThemeData(
+//            fontFamily: "Raleway",
+//            textTheme: Theme.of(context).textTheme.apply(bodyColor: textColor, displayColor: textColor),
             primaryColor: mainColorApp,
             scaffoldBackgroundColor: mainColorApp,
             highlightColor: colorHighlight,
             splashColor: colorHighlightSplash,
             accentColor: textColor,
-            cursorColor: cursorColor),
+            cursorColor: cursorColor,
+            textSelectionHandleColor: cursorColor,
+            textSelectionColor: colorHighlight),
         home: UnitConverterScreen());
   }
 }

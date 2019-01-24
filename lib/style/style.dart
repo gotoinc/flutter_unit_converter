@@ -11,7 +11,7 @@ TextStyle dialogTextStyle() {
 }
 
 TextStyle defaultHintTextStyle() {
-  return TextStyle(color: textColorHint, fontSize: textSize3, letterSpacing: letterSpacing);
+  return TextStyle(color: textColor['hint'], fontSize: textSize3, letterSpacing: letterSpacing);
 }
 
 TextStyle defaultLabelTextStyle() {

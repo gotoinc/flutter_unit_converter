@@ -3,7 +3,7 @@ import 'package:unit_converter/style/consts/colors.dart';
 import 'package:unit_converter/style/consts/dimensions.dart';
 import 'package:unit_converter/widget/input_section.dart';
 
-class ConverterGroup extends StatelessWidget {
+class UnitConverterGroup extends StatelessWidget {
   final inputWidget = InputSection();
   final outputWidget = InputSection();
 
