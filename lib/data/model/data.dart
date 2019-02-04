@@ -10,6 +10,18 @@ class Unit {
   final List<Designation> designations;
 }
 
+class Designation {
+  const Designation(this.id, this.title);
+
+  final int id;
+  final String title;
+
+  @override
+  String toString() {
+    return '$id - $title';
+  }
+}
+
 List<Unit> getUnits() {
   List<Unit> units = List();
   List<Designation> lengthDesignations = List();
@@ -33,11 +45,4 @@ List<Unit> getUnits() {
   units.add(Unit(4, "Volume", Colors.blue, Icons.looks_4, volumeDesignations));
 
   return units;
-}
-
-class Designation {
-  const Designation(this.id, this.title);
-
-  final int id;
-  final String title;
 }

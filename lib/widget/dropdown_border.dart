@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:unit_converter/data/model/data.dart';
-import 'package:unit_converter/style/consts/dimensions.dart';
-import 'package:unit_converter/style/style.dart';
+import 'package:unit_converter/style/consts/dimensions.dart' as Dimens;
+import 'package:unit_converter/style/style.dart' as Style;
 
 class DropdownBorder extends StatefulWidget {
   final List<Designation> designations;
@@ -44,7 +44,7 @@ class _DropdownBorderState extends State<DropdownBorder> {
             child: ButtonTheme(
                 alignedDropdown: true,
                 child: DropdownButton<Designation>(
-                    style: defaultTextStyle(),
+                    style: Style.defaultTextStyle(),
                     value: _selectedDesignation,
                     items: designations.map((Designation d) {
                       return DropdownMenuItem<Designation>(
@@ -60,8 +60,8 @@ class _DropdownBorderState extends State<DropdownBorder> {
                     onChanged: (Designation d) {
                       _update(d);
                     },
-                    elevation: dropDownUnitElevation,
-                    iconSize: icDropDownSize))));
+                    elevation: Dimens.dropDownUnitElevation,
+                    iconSize: Dimens.icDropDownSize))));
   }
 
   BoxDecoration _get(Color borderColor, double width, double radius) {

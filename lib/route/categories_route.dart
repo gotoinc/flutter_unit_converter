@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:unit_converter/style/consts/colors.dart';
-import 'package:unit_converter/style/style.dart';
+import 'package:unit_converter/style/consts/colors.dart' as Colors;
+import 'package:unit_converter/style/style.dart' as Style;
 import 'package:unit_converter/widget/categories.dart';
 
 class CategoriesScreen extends StatelessWidget {
@@ -10,9 +10,9 @@ class CategoriesScreen extends StatelessWidget {
         appBar: AppBar(
           leading: InkWell(
               onTap: () => (_navigateBack(context)),
-              child: Icon(Icons.arrow_back, color: textColor)),
+              child: Icon(Icons.arrow_back, color: Colors.textColor)),
           title: Text('Choose category'.toUpperCase(),
-              style: appBarTitleTextStyle()),
+              style: Style.appBarTitleTextStyle()),
           centerTitle: true,
           elevation: 0,
         ),

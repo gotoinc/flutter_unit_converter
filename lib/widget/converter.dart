@@ -1,23 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:unit_converter/data/model/data.dart';
-import 'package:unit_converter/style/consts/colors.dart';
-import 'package:unit_converter/style/consts/dimensions.dart';
+import 'package:unit_converter/style/consts/colors.dart' as Colors;
+import 'package:unit_converter/style/consts/dimensions.dart' as Dimens;
 import 'package:unit_converter/widget/input_section.dart';
 
-List<Designation> designations;
-
 class UnitConverterGroup extends StatefulWidget {
-  set (List<Designation> designations) => designations = designations;
+  _UnitConverterGroupState _state;
+  set data(List<Designation> designations) =>_state.data = designations;
+
+  UnitConverterGroup(List<Designation> designations) {
+    _state = _UnitConverterGroupState(designations);
+  }
 
   @override
   State<StatefulWidget> createState() {
-    return _UnitConverterGroupState();
+    return _state;
   }
 }
 
 class _UnitConverterGroupState extends State<UnitConverterGroup> {
-  final inputWidget = InputSection();
-  final outputWidget = InputSection();
+  List<Designation> _designations;
+  set data(List<Designation> designations) {
+    _designations = designations;
+    setState(() {
+      inputWidget.data = designations;
+      outputWidget.data = designations;
+    });
+  }
+
+  InputSection inputWidget;
+  InputSection outputWidget;
+
+  _UnitConverterGroupState(this._designations) {
+    inputWidget = InputSection(_designations);
+    outputWidget = InputSection(_designations);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,22 +65,21 @@ class _UnitConverterGroupState extends State<UnitConverterGroup> {
           DecoratedBox(
               decoration: BoxDecoration(
                   border: Border.all(
-                    color: textColor,
+                    color: Colors.textColor,
                     width: 1,
                   ),
                   borderRadius: BorderRadius.all(Radius.zero)),
               child: InkWell(
                   borderRadius: BorderRadius.all(Radius.zero),
                   onTap: () {
-                    String temp = inputWidget.getInputtedText();
-                    inputWidget
-                        .setTextToTextField(outputWidget.getInputtedText());
-                    outputWidget.setTextToTextField(temp);
+                    String temp = inputWidget.inputtedText();
+                    inputWidget.textToTextField = outputWidget.inputtedText();
+                    outputWidget.textToTextField = temp;
                   },
                   child: Padding(
-                      padding: EdgeInsets.all(defaultPadding),
+                      padding: EdgeInsets.all(Dimens.defaultPadding),
                       child: Icon(Icons.compare_arrows,
-                          color: textColor, size: icCompareArrowsSize)))),
+                          color: Colors.textColor, size: Dimens.icCompareArrowsSize)))),
           Expanded(child: outputWidget)
         ]);
   }
@@ -77,24 +93,23 @@ class _UnitConverterGroupState extends State<UnitConverterGroup> {
               child: DecoratedBox(
                   decoration: BoxDecoration(
                       border: Border.all(
-                        color: textColor,
+                        color: Colors.textColor,
                         width: 1,
                       ),
                       borderRadius: BorderRadius.all(Radius.zero)),
                   child: InkWell(
-                      highlightColor: colorHighlight,
-                      splashColor: colorHighlightSplash,
+                      highlightColor: Colors.colorHighlight,
+                      splashColor: Colors.colorHighlightSplash,
                       borderRadius: BorderRadius.all(Radius.zero),
                       onTap: () {
-                        String temp = inputWidget.getInputtedText();
-                        inputWidget
-                            .setTextToTextField(outputWidget.getInputtedText());
-                        outputWidget.setTextToTextField(temp);
+                        String temp = inputWidget.inputtedText();
+                        inputWidget.textToTextField = outputWidget.inputtedText();
+                        outputWidget.textToTextField = temp;
                       },
                       child: Padding(
-                          padding: EdgeInsets.all(defaultPadding),
+                          padding: EdgeInsets.all(Dimens.defaultPadding),
                           child: Icon(Icons.compare_arrows,
-                              color: textColor, size: icCompareArrowsSize)))))),
+                              color: Colors.textColor, size: Dimens.icCompareArrowsSize)))))),
       outputWidget
     ]);
   }
