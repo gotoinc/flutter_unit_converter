@@ -3,36 +3,45 @@ import 'package:unit_converter/data/model/data.dart';
 import 'package:unit_converter/style/consts/dimensions.dart' as Dimens;
 import 'package:unit_converter/style/style.dart' as Style;
 
+List<Designation> _designations;
+Designation _selectedDesignation;
 class DropdownBorder extends StatefulWidget {
-  final List<Designation> designations;
+  _DropdownBorderState _state;
+
   final Color borderColor;
   final double width;
   final double radius;
 
-  const DropdownBorder({Key key, this.borderColor, this.width, this.radius, @required this.designations})
-      : super(key: key);
+  DropdownBorder({this.borderColor, this.width, this.radius, @required List<Designation> data}) {
+    _designations = data;
+    print("Designation31: " + _designations.elementAt(0).toString());
+    _state = _DropdownBorderState(borderColor, width, radius);
+    _selectedDesignation = _designations.elementAt(0);
+  }
+
+  void setData(List<Designation> data) {
+    _designations = data;
+    print("Designation32: " + _designations.elementAt(0).toString());
+    _state._update(_designations.elementAt(0));
+    _selectedDesignation = _designations.elementAt(0);
+  }
 
   @override
   State<StatefulWidget> createState() {
-    return _DropdownBorderState(borderColor, width, radius, designations);
+    return _state;
   }
 }
 
 class _DropdownBorderState extends State<DropdownBorder> {
-  final List<Designation> designations;
   final Color borderColor;
   final double width;
   final double radius;
 
-  Designation _selectedDesignation;
+  _DropdownBorderState(this.borderColor, this.width, this.radius);
 
-  _DropdownBorderState(this.borderColor, this.width, this.radius, this.designations) {
-    this._selectedDesignation = designations.elementAt(0);
-  }
-
-  void _update(Designation designation) {
+  void _update(Designation d) {
     setState(() {
-      _selectedDesignation = designation;
+      _selectedDesignation = d;
     });
   }
 
@@ -46,7 +55,7 @@ class _DropdownBorderState extends State<DropdownBorder> {
                 child: DropdownButton<Designation>(
                     style: Style.defaultTextStyle(),
                     value: _selectedDesignation,
-                    items: designations.map((Designation d) {
+                    items: _designations.map((Designation d) {
                       return DropdownMenuItem<Designation>(
                           value: d,
                           child: Container(

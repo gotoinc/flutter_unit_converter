@@ -46,3 +46,10 @@ List<Unit> getUnits() {
 
   return units;
 }
+
+num from_cm_to_m(num cm) => (cm / 100);
+num from_m_to_cm(num m) => m * 100;
+num from_m_to_km(num m) => m / 1000;
+num from_km_to_m(num km) => km * 1000;
+num from_cm_to_km(num cm) => (from_m_to_km(from_cm_to_m(cm)));
+num from_km_to_cm(num km) => (from_km_to_m(from_m_to_cm(km)));

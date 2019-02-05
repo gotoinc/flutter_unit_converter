@@ -4,36 +4,29 @@ import 'package:unit_converter/style/consts/colors.dart' as Colors;
 import 'package:unit_converter/style/consts/dimensions.dart' as Dimens;
 import 'package:unit_converter/widget/input_section.dart';
 
-class UnitConverterGroup extends StatefulWidget {
-  _UnitConverterGroupState _state;
-  set data(List<Designation> designations) =>_state.data = designations;
-
-  UnitConverterGroup(List<Designation> designations) {
-    _state = _UnitConverterGroupState(designations);
-  }
-
-  @override
-  State<StatefulWidget> createState() {
-    return _state;
-  }
-}
-
-class _UnitConverterGroupState extends State<UnitConverterGroup> {
-  List<Designation> _designations;
-  set data(List<Designation> designations) {
-    _designations = designations;
-    setState(() {
-      inputWidget.data = designations;
-      outputWidget.data = designations;
-    });
-  }
-
+List<Designation> _designations;
+class UnitConverterGroup extends StatelessWidget {
   InputSection inputWidget;
   InputSection outputWidget;
 
-  _UnitConverterGroupState(this._designations) {
-    inputWidget = InputSection(_designations);
-    outputWidget = InputSection(_designations);
+  UnitConverterGroup(List<Designation> data) {
+    _designations = data;
+    print("Designation11: " + _designations.elementAt(0).toString());
+    inputWidget = InputSection(true, _designations, (newText, inInput) {
+        print('Input: $newText');
+        outputWidget.setTextToTextField(from_m_to_cm(num.parse(newText)).toStringAsFixed(2));
+    });
+    outputWidget = InputSection(false, _designations, (newText, inInput) {
+        print('Output: $newText');
+        inputWidget.setTextToTextField(from_cm_to_m(num.parse(newText)).toStringAsFixed(2));
+    });
+  }
+
+  void setData(List<Designation> data) {
+    _designations = data;
+    print("Designation12: " + _designations.elementAt(0).toString());
+    inputWidget.setData(data);
+    outputWidget.setData(data);
   }
 
   @override
@@ -72,9 +65,9 @@ class _UnitConverterGroupState extends State<UnitConverterGroup> {
               child: InkWell(
                   borderRadius: BorderRadius.all(Radius.zero),
                   onTap: () {
-                    String temp = inputWidget.inputtedText();
-                    inputWidget.textToTextField = outputWidget.inputtedText();
-                    outputWidget.textToTextField = temp;
+                    String temp = inputWidget.getInputtedText();
+                    inputWidget.setTextToTextField(outputWidget.getInputtedText());
+                    outputWidget.setTextToTextField(temp);
                   },
                   child: Padding(
                       padding: EdgeInsets.all(Dimens.defaultPadding),
@@ -102,9 +95,9 @@ class _UnitConverterGroupState extends State<UnitConverterGroup> {
                       splashColor: Colors.colorHighlightSplash,
                       borderRadius: BorderRadius.all(Radius.zero),
                       onTap: () {
-                        String temp = inputWidget.inputtedText();
-                        inputWidget.textToTextField = outputWidget.inputtedText();
-                        outputWidget.textToTextField = temp;
+                        String temp = inputWidget.getInputtedText();
+                        inputWidget.setTextToTextField(outputWidget.getInputtedText());
+                        outputWidget.setTextToTextField(temp);
                       },
                       child: Padding(
                           padding: EdgeInsets.all(Dimens.defaultPadding),

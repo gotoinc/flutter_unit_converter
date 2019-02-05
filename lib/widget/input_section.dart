@@ -5,39 +5,37 @@ import 'package:unit_converter/style/consts/dimensions.dart' as Dimens;
 import 'package:unit_converter/style/style.dart' as Style;
 import 'package:unit_converter/widget/dropdown_border.dart';
 
-class InputSection extends StatefulWidget {
-  _InputSectionState _state;
-  set data(List<Designation> designations) => _state.data = designations;
+List<Designation> _designations;
+class InputSection extends StatelessWidget {
+  DropdownBorder dropdownWidget;
+  Function(String, bool) inputEvent;
 
-  InputSection(List<Designation> designations) {
-    _state = _InputSectionState(designations);
-  }
-
-  get inputtedText => _state.getInputtedText();
-  set textToTextField(String s) => _state.setTextToTextField(s);
-
-  @override
-  State<StatefulWidget> createState() {
-    return _state;
-  }
-}
-
-class _InputSectionState extends State<InputSection> {
+  final bool isInput;
   final _textController = TextEditingController();
   var lastInputtedNumber = "";
-  List<Designation> _designations;
-  set data(List<Designation> designations) {
-    print('input section set state: ${designations.elementAt(0).toString()}');
-    setState(() => _designations = designations);
+
+  InputSection(this.isInput, List<Designation> data, this.inputEvent) {
+    _designations = data;
+    print("Designation21: " + _designations.elementAt(0).toString());
+    dropdownWidget = DropdownBorder(
+        borderColor: Colors.textColor,
+        width: Dimens.borderWidthDefault,
+        radius: Dimens.inputFieldRadius,
+        data: _designations);
   }
 
-  _InputSectionState(this._designations);
+  void setData(List<Designation> data) {
+    _designations = data;
+    print("Designation22: " + _designations.elementAt(0).toString());
+    dropdownWidget.setData(data);
+  }
 
   String getInputtedText() {
     return _textController.text;
   }
 
   void setTextToTextField(String newText) {
+    print('Set text to $isInput => $newText');
     _textController.text = newText;
     _textController.selection = TextSelection.collapsed(offset: newText.length);
   }
@@ -55,10 +53,17 @@ class _InputSectionState extends State<InputSection> {
                 style: Style.defaultTextStyle(),
                 controller: _textController,
                 onChanged: (s) {
-                  if (!_isNumber(s))
-                    setTextToTextField(lastInputtedNumber);
-                  else
+                  if(s.isEmpty) {
+                    lastInputtedNumber = '';
+                    inputEvent('0', isInput);
+                    return;
+                  }
+
+                  if (!_isNumber(s)) setTextToTextField(lastInputtedNumber);
+                  else {
                     lastInputtedNumber = s;
+                    inputEvent(s, isInput);
+                  }
                 },
                 decoration: InputDecoration(
                     hintText: "Value",
@@ -73,11 +78,7 @@ class _InputSectionState extends State<InputSection> {
                     _get(Dimens.borderWidthDefault, Colors.textColor['disabled'])),
               ),
               SizedBox(height: Dimens.defaultPadding),
-              DropdownBorder(
-                  borderColor: Colors.textColor,
-                  width: Dimens.borderWidthDefault,
-                  radius: Dimens.inputFieldRadius,
-                  designations: _designations)
+              dropdownWidget
             ])));
   }
 
