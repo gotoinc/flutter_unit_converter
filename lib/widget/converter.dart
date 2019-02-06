@@ -5,28 +5,48 @@ import 'package:unit_converter/style/consts/dimensions.dart' as Dimens;
 import 'package:unit_converter/widget/input_section.dart';
 
 List<Designation> _designations;
+Designation inputDesignation;
+Designation outputDesignation;
+
+calculateResult(bool isInput, num inputtedValue) {
+  if(inputtedValue == 0)
+    return '';
+  String result = '';
+  isInput ? inputDesignation.conversion.forEach((key, f) => key == outputDesignation.title ? result = f(inputtedValue).toStringAsFixed(2) : '')
+      : outputDesignation.conversion.forEach((key, f) => key == inputDesignation.title ? result = f(inputtedValue).toStringAsFixed(2) : '');
+  return result;
+}
+
 class UnitConverterGroup extends StatelessWidget {
   InputSection inputWidget;
   InputSection outputWidget;
 
   UnitConverterGroup(List<Designation> data) {
     _designations = data;
-    print("Designation11: " + _designations.elementAt(0).toString());
-    inputWidget = InputSection(true, _designations, (newText, inInput) {
-        print('Input: $newText');
-        outputWidget.setTextToTextField(from_m_to_cm(num.parse(newText)).toStringAsFixed(2));
-    });
-    outputWidget = InputSection(false, _designations, (newText, inInput) {
-        print('Output: $newText');
-        inputWidget.setTextToTextField(from_cm_to_m(num.parse(newText)).toStringAsFixed(2));
-    });
+    inputDesignation = _designations.elementAt(0);
+    outputDesignation = _designations.elementAt(1);
+    inputWidget = InputSection((newText) {
+      outputWidget.setTextToTextField(calculateResult(true, num.parse(newText)));
+    }, (d, currentText, refresh) {
+      print('Input designation: $currentText - ${d.title}');
+      inputDesignation = d;
+      if(outputWidget != null && refresh)
+        outputWidget.setTextToTextField(calculateResult(true, num.parse(currentText)));
+    }, _designations, inputDesignation);
+    outputWidget = InputSection((newText) {
+      inputWidget.setTextToTextField(calculateResult(false, num.parse(newText)));
+    }, (d, currentText, refresh) {
+      print('Output designation: $currentText - ${d.title}');
+      outputDesignation = d;
+      if(refresh)
+        inputWidget.setTextToTextField(calculateResult(false, num.parse(currentText)));
+    }, _designations, outputDesignation);
   }
 
   void setData(List<Designation> data) {
     _designations = data;
-    print("Designation12: " + _designations.elementAt(0).toString());
-    inputWidget.setData(data);
-    outputWidget.setData(data);
+    inputWidget.setData(data, data.elementAt(0), true);
+    outputWidget.setData(data, data.elementAt(1), false);
   }
 
   @override

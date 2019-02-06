@@ -11,10 +11,11 @@ class Unit {
 }
 
 class Designation {
-  const Designation(this.id, this.title);
+  const Designation(this.id, this.title, this.conversion);
 
   final int id;
   final String title;
+  final Map<String, Function> conversion;
 
   @override
   String toString() {
@@ -25,31 +26,24 @@ class Designation {
 List<Unit> getUnits() {
   List<Unit> units = List();
   List<Designation> lengthDesignations = List();
-  lengthDesignations.add(Designation(1, "cm"));
-  lengthDesignations.add(Designation(2, "m"));
-  lengthDesignations.add(Designation(3, "km"));
+  lengthDesignations.add(Designation(1, 'cm', {'cm': ((cm) => cm), 'm': ((cm) => cm / 100), 'km': ((cm) => cm / 100 / 1000)}));
+  lengthDesignations.add(Designation(2, 'm', {'cm': ((m) => m * 100), 'm': ((m) => m), 'km': ((m) => m / 1000)}));
+  lengthDesignations.add(Designation(3, 'km', {'cm': ((km) => km * 1000 * 100), 'm': ((km) => km * 1000), 'km': ((km) => km)}));
   List<Designation> weightDesignations = List();
-  weightDesignations.add(Designation(1, "gr"));
-  weightDesignations.add(Designation(2, "kg"));
-  weightDesignations.add(Designation(3, "cwt"));
+  weightDesignations.add(Designation(1, 'gr', {'gr': ((gr) => gr), 'kg': ((gr) => gr / 1000), 'cwt': ((cwt) => cwt / 1000 / 100)}));
+  weightDesignations.add(Designation(2, 'kg', {'gr': ((kg) => kg * 1000), 'kg': ((kg) => kg), 'cwt': ((kg) => kg / 100)}));
+  weightDesignations.add(Designation(3, 'cwt', {'gr': ((cwt) => cwt * 1000 * 100), 'kg': ((cwt) => cwt / 100), 'cwt': ((cwt) => cwt)}));
   List<Designation> timeDesignations = List();
-  timeDesignations.add(Designation(1, "sec"));
-  timeDesignations.add(Designation(2, "min"));
-  timeDesignations.add(Designation(3, "h"));
+  timeDesignations.add(Designation(1, 'sec', {'sec': ((sec) => sec), 'min': ((sec) => sec / 60), 'h': ((sec) => sec / 60 / 60)}));
+  timeDesignations.add(Designation(2, 'min', {'sec': ((min) => min * 60), 'min': ((min) => min), 'h': ((min) => min / 60)}));
+  timeDesignations.add(Designation(3, 'h', {'sec': ((h) => h * 60 * 60), 'min': ((h) => h * 60), 'h': ((h) => h)}));
   List<Designation> volumeDesignations = List();
-  volumeDesignations.add(Designation(1, "ml"));
-  volumeDesignations.add(Designation(2, "L"));
-  units.add(Unit(1, "Length", Colors.blue, Icons.looks_one, lengthDesignations));
-  units.add(Unit(2, "Weight", Colors.blue, Icons.looks_two, weightDesignations));
-  units.add(Unit(3, "Time", Colors.blue, Icons.looks_3, timeDesignations));
-  units.add(Unit(4, "Volume", Colors.blue, Icons.looks_4, volumeDesignations));
+  volumeDesignations.add(Designation(1, 'ml', {'ml': ((ml) => ml), 'L': ((ml) => ml / 1000)}));
+  volumeDesignations.add(Designation(2, 'L', {'ml': ((l) => l * 1000), 'L': ((l) => l)}));
+  units.add(Unit(1, 'Length', Colors.blue, Icons.looks_one, lengthDesignations));
+  units.add(Unit(2, 'Weight', Colors.blue, Icons.looks_two, weightDesignations));
+  units.add(Unit(3, 'Time', Colors.blue, Icons.looks_3, timeDesignations));
+  units.add(Unit(4, 'Volume', Colors.blue, Icons.looks_4, volumeDesignations));
 
   return units;
 }
-
-num from_cm_to_m(num cm) => (cm / 100);
-num from_m_to_cm(num m) => m * 100;
-num from_m_to_km(num m) => m / 1000;
-num from_km_to_m(num km) => km * 1000;
-num from_cm_to_km(num cm) => (from_m_to_km(from_cm_to_m(cm)));
-num from_km_to_cm(num km) => (from_km_to_m(from_m_to_cm(km)));
