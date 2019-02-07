@@ -27,11 +27,16 @@ class InputSection extends StatelessWidget {
     dropdownWidget.setData(data, selected, refresh);
   }
 
+  void triggerInputEvent() {
+    _inputEvent(getInputtedText());
+  }
+
   String getInputtedText() {
     return _textController.text;
   }
 
   void setTextToTextField(String newText) {
+    print('Set text to text field => $newText');
     _textController.text = newText;
     _textController.selection = TextSelection.collapsed(offset: newText.length);
   }
@@ -49,6 +54,7 @@ class InputSection extends StatelessWidget {
                 style: Style.defaultTextStyle(),
                 controller: _textController,
                 onChanged: (s) {
+                  print('text changed: $s');
                   if(s.isEmpty) {
                     lastInputtedNumber = '0';
                     _inputEvent(lastInputtedNumber);
@@ -58,6 +64,7 @@ class InputSection extends StatelessWidget {
                   if (!_isNumber(s)) setTextToTextField(lastInputtedNumber);
                   else {
                     lastInputtedNumber = s;
+                    print('call input event: $s');
                     _inputEvent(s);
                   }
                 },
@@ -101,7 +108,7 @@ class DropdownBorder extends StatefulWidget {
 
   DropdownBorder(this.borderColor, this.width, this.radius, this._selectEvent, this._selectedDesignation) {
     _state = _DropdownBorderState(borderColor, width, radius, _selectEvent, _selectedDesignation);
-    _selectEvent(_selectedDesignation, true);
+    _selectEvent(_selectedDesignation, false);
   }
 
   void setData(List<Designation> data, Designation selected, bool refresh) {

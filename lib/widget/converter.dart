@@ -9,11 +9,11 @@ Designation inputDesignation;
 Designation outputDesignation;
 
 calculateResult(bool isInput, num inputtedValue) {
-  if(inputtedValue == 0)
-    return '';
   String result = '';
-  isInput ? inputDesignation.conversion.forEach((key, f) => key == outputDesignation.title ? result = f(inputtedValue).toStringAsFixed(2) : '')
-      : outputDesignation.conversion.forEach((key, f) => key == inputDesignation.title ? result = f(inputtedValue).toStringAsFixed(2) : '');
+  if(inputtedValue != 0)
+    isInput ? inputDesignation.conversion.forEach((key, f) => key == outputDesignation.title ? result = f(inputtedValue).toStringAsFixed(2) : '')
+        : outputDesignation.conversion.forEach((key, f) => key == inputDesignation.title ? result = f(inputtedValue).toStringsAsFixed(2) : '');
+  print('Result: $result');
   return result;
 }
 
@@ -25,18 +25,22 @@ class UnitConverterGroup extends StatelessWidget {
     _designations = data;
     inputDesignation = _designations.elementAt(0);
     outputDesignation = _designations.elementAt(1);
+
     inputWidget = InputSection((newText) {
-      outputWidget.setTextToTextField(calculateResult(true, num.parse(newText)));
-    }, (d, currentText, refresh) {
-      print('Input designation: $currentText - ${d.title}');
-      inputDesignation = d;
-      if(outputWidget != null && refresh)
-        outputWidget.setTextToTextField(calculateResult(true, num.parse(currentText)));
-    }, _designations, inputDesignation);
+        print('Input text: $newText');
+        outputWidget.setTextToTextField(calculateResult(true, num.parse(newText)));
+      }
+      , (d, currentText, refresh) {
+        print('Input designation: $currentText - ${d.title} - $refresh');
+          inputDesignation = d;
+          if(refresh)
+            outputWidget.setTextToTextField(calculateResult(true, num.parse(currentText)));
+      }
+      , _designations, inputDesignation);
     outputWidget = InputSection((newText) {
       inputWidget.setTextToTextField(calculateResult(false, num.parse(newText)));
     }, (d, currentText, refresh) {
-      print('Output designation: $currentText - ${d.title}');
+      print('Output designation: $currentText - ${d.title} - $refresh');
       outputDesignation = d;
       if(refresh)
         inputWidget.setTextToTextField(calculateResult(false, num.parse(currentText)));
@@ -45,8 +49,10 @@ class UnitConverterGroup extends StatelessWidget {
 
   void setData(List<Designation> data) {
     _designations = data;
-    inputWidget.setData(data, data.elementAt(0), true);
+    inputWidget.setData(data, data.elementAt(0), false);
     outputWidget.setData(data, data.elementAt(1), false);
+    inputWidget.triggerInputEvent();
+    print('Data was changed');
   }
 
   @override
@@ -118,6 +124,7 @@ class UnitConverterGroup extends StatelessWidget {
                         String temp = inputWidget.getInputtedText();
                         inputWidget.setTextToTextField(outputWidget.getInputtedText());
                         outputWidget.setTextToTextField(temp);
+                        inputWidget.triggerInputEvent();
                       },
                       child: Padding(
                           padding: EdgeInsets.all(Dimens.defaultPadding),
