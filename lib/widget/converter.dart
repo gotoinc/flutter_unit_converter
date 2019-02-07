@@ -12,7 +12,7 @@ calculateResult(bool isInput, num inputtedValue) {
   String result = '';
   if(inputtedValue != 0)
     isInput ? inputDesignation.conversion.forEach((key, f) => key == outputDesignation.title ? result = f(inputtedValue).toStringAsFixed(2) : '')
-        : outputDesignation.conversion.forEach((key, f) => key == inputDesignation.title ? result = f(inputtedValue).toStringsAsFixed(2) : '');
+        : outputDesignation.conversion.forEach((key, f) => key == inputDesignation.title ? result = f(inputtedValue).toStringAsFixed(2) : '');
   print('Result: $result');
   return result;
 }
@@ -91,9 +91,8 @@ class UnitConverterGroup extends StatelessWidget {
               child: InkWell(
                   borderRadius: BorderRadius.all(Radius.zero),
                   onTap: () {
-                    String temp = inputWidget.getInputtedText();
                     inputWidget.setTextToTextField(outputWidget.getInputtedText());
-                    outputWidget.setTextToTextField(temp);
+                    inputWidget.triggerInputEvent();
                   },
                   child: Padding(
                       padding: EdgeInsets.all(Dimens.defaultPadding),

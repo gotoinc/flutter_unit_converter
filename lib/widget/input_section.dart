@@ -28,7 +28,7 @@ class InputSection extends StatelessWidget {
   }
 
   void triggerInputEvent() {
-    _inputEvent(getInputtedText());
+    _inputEvent(getInputtedText().isEmpty ? '0' : getInputtedText());
   }
 
   String getInputtedText() {
@@ -107,7 +107,6 @@ class DropdownBorder extends StatefulWidget {
   _DropdownBorderState _state;
 
   DropdownBorder(this.borderColor, this.width, this.radius, this._selectEvent, this._selectedDesignation) {
-    _state = _DropdownBorderState(borderColor, width, radius, _selectEvent, _selectedDesignation);
     _selectEvent(_selectedDesignation, false);
   }
 
@@ -120,6 +119,7 @@ class DropdownBorder extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
+    _state = _DropdownBorderState(borderColor, width, radius, _selectEvent, _selectedDesignation);
     return _state;
   }
 }
