@@ -6,7 +6,7 @@ class Unit {
   final int id;
   final String name;
   final Color color;
-  final IconData icon;
+  final String icon;
   final List<Designation> designations;
 }
 
@@ -40,10 +40,10 @@ List<Unit> getUnits() {
   List<Designation> volumeDesignations = List();
   volumeDesignations.add(Designation(1, 'ml', {'ml': ((ml) => ml), 'L': ((ml) => ml / 1000)}));
   volumeDesignations.add(Designation(2, 'L', {'ml': ((l) => l * 1000), 'L': ((l) => l)}));
-  units.add(Unit(1, 'Length', Colors.blue, Icons.looks_one, lengthDesignations));
-  units.add(Unit(2, 'Weight', Colors.blue, Icons.looks_two, weightDesignations));
-  units.add(Unit(3, 'Time', Colors.blue, Icons.looks_3, timeDesignations));
-  units.add(Unit(4, 'Volume', Colors.blue, Icons.looks_4, volumeDesignations));
+  units.add(Unit(1, 'Length', Colors.blue, 'assets/icons/ruler.png', lengthDesignations));
+  units.add(Unit(2, 'Weight', Colors.blue, 'assets/icons/libra.png', weightDesignations));
+  units.add(Unit(3, 'Time', Colors.blue, 'assets/icons/stopwatch.png', timeDesignations));
+  units.add(Unit(4, 'Volume', Colors.blue, 'assets/icons/water.png', volumeDesignations));
 
   return units;
 }

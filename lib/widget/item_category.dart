@@ -26,8 +26,8 @@ class ItemCategory extends StatelessWidget {
                 child: Padding(
                     padding: EdgeInsets.all(Dimens.listItemPadding),
                     child: Row(children: <Widget>[
-                      Icon(unit.icon,
-                          color: Colors.textColor, size: Dimens.icCategorySize),
+                      Image.asset(unit.icon,
+                          color: Colors.textColor, width: Dimens.icCategorySize, height: Dimens.icCategorySize),
                       Center(
                           child: Padding(
                               padding: EdgeInsets.symmetric(

@@ -9,7 +9,7 @@ class Application extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         theme: ThemeData(
-//            fontFamily: "Raleway",
+            fontFamily: 'MontereyFLF',
 //            textTheme: Theme.of(context).textTheme.apply(bodyColor: textColor, displayColor: textColor),
             primaryColor: mainColorApp,
             scaffoldBackgroundColor: mainColorApp,
