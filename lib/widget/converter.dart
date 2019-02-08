@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:unit_converter/data/model/data.dart';
 import 'package:unit_converter/style/consts/colors.dart' as Colors;
 import 'package:unit_converter/style/consts/dimensions.dart' as Dimens;
+import 'package:unit_converter/style/style.dart' as Style;
 import 'package:unit_converter/widget/input_section.dart';
 
 List<Designation> _designations;
@@ -10,9 +11,16 @@ Designation outputDesignation;
 
 calculateResult(bool isInput, num inputtedValue) {
   String result = '';
-  if(inputtedValue != 0)
-    isInput ? inputDesignation.conversion.forEach((key, f) => key == outputDesignation.title ? result = f(inputtedValue).toStringAsFixed(2) : '')
-        : outputDesignation.conversion.forEach((key, f) => key == inputDesignation.title ? result = f(inputtedValue).toStringAsFixed(2) : '');
+  if (inputtedValue != 0)
+    isInput
+        ? inputDesignation.conversion.forEach((key, f) =>
+            key == outputDesignation.title
+                ? result = f(inputtedValue).toStringAsFixed(2)
+                : '')
+        : outputDesignation.conversion.forEach((key, f) =>
+            key == inputDesignation.title
+                ? result = f(inputtedValue).toStringAsFixed(2)
+                : '');
   print('Result: $result');
   return result;
 }
@@ -20,39 +28,54 @@ calculateResult(bool isInput, num inputtedValue) {
 class UnitConverterGroup extends StatelessWidget {
   InputSection inputWidget;
   InputSection outputWidget;
+  ChangeButton changeButton;
 
   UnitConverterGroup(List<Designation> data) {
     _designations = data;
-    inputDesignation = _designations.elementAt(0);
-    outputDesignation = _designations.elementAt(1);
+    if (_designations != null) {
+      inputDesignation = _designations.elementAt(0);
+      outputDesignation = _designations.elementAt(1);
+    }
 
     inputWidget = InputSection((newText) {
-        print('Input text: $newText');
-        outputWidget.setTextToTextField(calculateResult(true, num.parse(newText)));
-      }
-      , (d, currentText, refresh) {
-        print('Input designation: $currentText - ${d.title} - $refresh');
-          inputDesignation = d;
-          if(refresh)
-            outputWidget.setTextToTextField(calculateResult(true, num.parse(currentText)));
-      }
-      , _designations, inputDesignation);
-    outputWidget = InputSection((newText) {
-      inputWidget.setTextToTextField(calculateResult(false, num.parse(newText)));
+      print('Input text: $newText');
+      outputWidget
+          .setTextToTextField(calculateResult(true, num.parse(newText)));
     }, (d, currentText, refresh) {
-      print('Output designation: $currentText - ${d.title} - $refresh');
+      print('Input designation: $currentText - ${d != null ? d.title : null} - $refresh');
+      inputDesignation = d;
+      if (refresh)
+        outputWidget
+            .setTextToTextField(calculateResult(true, num.parse(currentText)));
+    }, _designations, inputDesignation);
+    outputWidget = InputSection((newText) {
+      inputWidget
+          .setTextToTextField(calculateResult(false, num.parse(newText)));
+    }, (d, currentText, refresh) {
+      print('Output designation: $currentText - ${d != null ? d.title : null} - $refresh');
       outputDesignation = d;
-      if(refresh)
-        inputWidget.setTextToTextField(calculateResult(false, num.parse(currentText)));
+      if (refresh)
+        inputWidget
+            .setTextToTextField(calculateResult(false, num.parse(currentText)));
     }, _designations, outputDesignation);
+    changeButton = ChangeButton(false);
   }
 
   void setData(List<Designation> data) {
     _designations = data;
-    inputWidget.setData(data, data.elementAt(0), false);
-    outputWidget.setData(data, data.elementAt(1), false);
-    inputWidget.triggerInputEvent();
-    print('Data was changed');
+    if (data != null) {
+      changeButton.isLoading = false;
+      inputWidget.setData(data, data.elementAt(0), false);
+      outputWidget.setData(data, data.elementAt(1), false);
+      inputWidget.triggerInputEvent();
+      print('Data was changed');
+    } else {
+      print('Need to load data from API');
+      changeButton.isLoading = true;
+      inputWidget.setData(data, null, false);
+      outputWidget.setData(data, null, false);
+      Api.getInstance().getCurrencies;
+    }
   }
 
   @override
@@ -91,13 +114,15 @@ class UnitConverterGroup extends StatelessWidget {
               child: InkWell(
                   borderRadius: BorderRadius.all(Radius.zero),
                   onTap: () {
-                    inputWidget.setTextToTextField(outputWidget.getInputtedText());
+                    inputWidget
+                        .setTextToTextField(outputWidget.getInputtedText());
                     inputWidget.triggerInputEvent();
                   },
                   child: Padding(
                       padding: EdgeInsets.all(Dimens.defaultPadding),
                       child: Icon(Icons.compare_arrows,
-                          color: Colors.textColor, size: Dimens.icCompareArrowsSize)))),
+                          color: Colors.textColor,
+                          size: Dimens.icCompareArrowsSize)))),
           Expanded(child: outputWidget)
         ]);
   }
@@ -105,31 +130,67 @@ class UnitConverterGroup extends StatelessWidget {
   Widget _columnForPortraitOrientation() {
     return Column(children: <Widget>[
       inputWidget,
-      Center(
-          child: RotatedBox(
-              quarterTurns: 1,
-              child: DecoratedBox(
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.textColor,
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.zero)),
-                  child: InkWell(
-                      highlightColor: Colors.colorHighlight,
-                      splashColor: Colors.colorHighlightSplash,
-                      borderRadius: BorderRadius.all(Radius.zero),
-                      onTap: () {
-                        String temp = inputWidget.getInputtedText();
-                        inputWidget.setTextToTextField(outputWidget.getInputtedText());
-                        outputWidget.setTextToTextField(temp);
-                        inputWidget.triggerInputEvent();
-                      },
-                      child: Padding(
-                          padding: EdgeInsets.all(Dimens.defaultPadding),
-                          child: Icon(Icons.compare_arrows,
-                              color: Colors.textColor, size: Dimens.icCompareArrowsSize)))))),
+      Center(child: changeButton),
       outputWidget
     ]);
+  }
+}
+
+class ChangeButton extends StatefulWidget {
+  bool _isLoading;
+  set isLoading(bool isLoading) {
+    _isLoading = isLoading;
+    _state._update(_isLoading);
+  }
+
+  ChangeButton(this._isLoading);
+
+  _ChangeButtonState _state;
+
+  @override
+  State<StatefulWidget> createState() {
+    print('Create state of \"Change button\"');
+    _state = _ChangeButtonState(_isLoading);
+    return _state;
+  }
+}
+
+class _ChangeButtonState extends State<ChangeButton> {
+  bool _isLoading;
+
+  _ChangeButtonState(this._isLoading);
+
+  void _update(bool isLoading) {
+    setState(() {
+      _isLoading = isLoading;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _isLoading ? Text("Uploading info...", style: Style.defaultHintTextStyle()) : RotatedBox(
+        quarterTurns: 1,
+        child: DecoratedBox(
+            decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.textColor,
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.all(Radius.zero)),
+            child: InkWell(
+                highlightColor: Colors.colorHighlight,
+                splashColor: Colors.colorHighlightSplash,
+                borderRadius: BorderRadius.all(Radius.zero),
+                onTap: () {
+//                  String temp = inputWidget.getInputtedText();
+//                  inputWidget.setTextToTextField(outputWidget.getInputtedText());
+//                  outputWidget.setTextToTextField(temp);
+//                  inputWidget.triggerInputEvent();
+                },
+                child: Padding(
+                    padding: EdgeInsets.all(Dimens.defaultPadding),
+                    child: Icon(Icons.compare_arrows,
+                        color: Colors.textColor,
+                        size: Dimens.icCompareArrowsSize)))));
   }
 }

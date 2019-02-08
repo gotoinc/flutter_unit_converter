@@ -29,6 +29,7 @@ class UnitConverterScreen extends StatelessWidget {
     selectedUnit = await Navigator.of(context).push(MaterialPageRoute(builder: ((context) => CategoriesScreen())));
     _body.setData(selectedUnit.designations);
     appBarTitle = selectedUnit.name;
+    print('App bar title: $appBarTitle');
   }
 }
 

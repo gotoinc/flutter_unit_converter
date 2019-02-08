@@ -14,12 +14,18 @@ class InputSection extends StatelessWidget {
   final _textController = TextEditingController();
   var lastInputtedNumber = '0';
 
-  InputSection(this._inputEvent, this._selectEvent, List<Designation> data, Designation selected) {
+  InputSection(this._inputEvent, this._selectEvent, List<Designation> data,
+      Designation selected) {
     _designations = data;
-    dropdownWidget = DropdownBorder(Colors.textColor, Dimens.borderWidthDefault, Dimens.inputFieldRadius
-        , (designation, refresh) => _selectEvent(designation, getInputtedText().isEmpty ? '0' : getInputtedText(), refresh)
-        , selected);
-    print('Create section. Where dropdown widget has ${dropdownWidget.hashCode} hash code');
+    dropdownWidget = DropdownBorder(
+        Colors.textColor,
+        Dimens.borderWidthDefault,
+        Dimens.inputFieldRadius,
+        (designation, refresh) => _selectEvent(designation,
+            getInputtedText().isEmpty ? '0' : getInputtedText(), refresh),
+        selected);
+    print(
+        'Create section. Where dropdown widget has ${dropdownWidget.hashCode} hash code');
   }
 
   void setData(List<Designation> data, Designation selected, bool refresh) {
@@ -55,13 +61,14 @@ class InputSection extends StatelessWidget {
                 controller: _textController,
                 onChanged: (s) {
                   print('text changed: $s');
-                  if(s.isEmpty) {
+                  if (s.isEmpty) {
                     lastInputtedNumber = '0';
                     _inputEvent(lastInputtedNumber);
                     return;
                   }
 
-                  if (!_isNumber(s)) setTextToTextField(lastInputtedNumber);
+                  if (!_isNumber(s))
+                    setTextToTextField(lastInputtedNumber);
                   else {
                     lastInputtedNumber = s;
                     print('call input event: $s');
@@ -75,10 +82,12 @@ class InputSection extends StatelessWidget {
                     hintStyle: Style.defaultHintTextStyle(),
                     contentPadding: EdgeInsets.all(Dimens.defaultPadding),
                     border: _get(Dimens.borderWidthDefault, Colors.textColor),
-                    enabledBorder: _get(Dimens.borderWidthDefault, Colors.textColor),
-                    focusedBorder: _get(Dimens.borderWidthFocused, Colors.textColor),
-                    disabledBorder:
-                    _get(Dimens.borderWidthDefault, Colors.textColor['disabled'])),
+                    enabledBorder:
+                        _get(Dimens.borderWidthDefault, Colors.textColor),
+                    focusedBorder:
+                        _get(Dimens.borderWidthFocused, Colors.textColor),
+                    disabledBorder: _get(Dimens.borderWidthDefault,
+                        Colors.textColor['disabled'])),
               ),
               SizedBox(height: Dimens.defaultPadding),
               dropdownWidget
@@ -106,7 +115,8 @@ class DropdownBorder extends StatefulWidget {
 
   _DropdownBorderState _state;
 
-  DropdownBorder(this.borderColor, this.width, this.radius, this._selectEvent, this._selectedDesignation) {
+  DropdownBorder(this.borderColor, this.width, this.radius, this._selectEvent,
+      this._selectedDesignation) {
     _selectEvent(_selectedDesignation, false);
   }
 
@@ -119,7 +129,8 @@ class DropdownBorder extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    _state = _DropdownBorderState(borderColor, width, radius, _selectEvent, _selectedDesignation);
+    _state = _DropdownBorderState(
+        borderColor, width, radius, _selectEvent, _selectedDesignation);
     return _state;
   }
 }
@@ -131,7 +142,8 @@ class _DropdownBorderState extends State<DropdownBorder> {
   final Function(Designation, bool) _selectEvent;
   Designation _selectedDesignation;
 
-  _DropdownBorderState(this.borderColor, this.width, this.radius, this._selectEvent, this._selectedDesignation);
+  _DropdownBorderState(this.borderColor, this.width, this.radius,
+      this._selectEvent, this._selectedDesignation);
 
   void _update(Designation d) {
     setState(() {
@@ -143,30 +155,31 @@ class _DropdownBorderState extends State<DropdownBorder> {
   Widget build(BuildContext context) {
     return Container(
         decoration: _get(borderColor, width, radius),
-        child: DropdownButtonHideUnderline(
-            child: ButtonTheme(
-                alignedDropdown: true,
-                child: DropdownButton<Designation>(
-                    style: Style.defaultTextStyle(),
-                    value: _selectedDesignation,
-                    items: _designations.map((Designation d) {
-                      return DropdownMenuItem<Designation>(
-                          value: d,
-                          child: Container(
-                              child: Text(
+        child: IntrinsicHeight(
+            child: DropdownButtonHideUnderline(
+                child: ButtonTheme(
+                    alignedDropdown: true,
+                    child: DropdownButton<Designation>(
+                        style: Style.defaultTextStyle(),
+                        value: _selectedDesignation,
+                        items: _designations != null ? _designations.map((Designation d) {
+                          return DropdownMenuItem<Designation>(
+                              value: d,
+                              child: Container(
+                                  child: Text(
                                 d.title,
                                 softWrap: true,
                               )));
-                    }).toList(),
-                    isDense: false,
-                    isExpanded: true,
-                    onChanged: (Designation d) {
-                      print('Designation was changed');
-                      _selectEvent(d, true);
-                      _update(d);
-                    },
-                    elevation: Dimens.dropDownUnitElevation,
-                    iconSize: Dimens.icDropDownSize))));
+                        }).toList() : null,
+                        isDense: false,
+                        isExpanded: true,
+                        onChanged: (Designation d) {
+                          print('Designation was changed');
+                          _selectEvent(d, true);
+                          _update(d);
+                        },
+                        elevation: Dimens.dropDownUnitElevation,
+                        iconSize: Dimens.icDropDownSize)))));
   }
 
   BoxDecoration _get(Color borderColor, double width, double radius) {

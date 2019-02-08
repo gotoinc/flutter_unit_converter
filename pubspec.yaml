@@ -42,6 +42,7 @@ flutter:
     - assets/icons/stopwatch.png
     - assets/icons/water.png
     - assets/icons/libra.png
+    - assets/icons/currency exchange.png
   fonts:
   - family: MontereyFLF
     fonts:

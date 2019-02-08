@@ -1,21 +1,61 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:convert' show json, utf8;
+import 'dart:io';
+
+class Api {
+  final _httpClient = HttpClient();
+  final _url = 'flutter.udacity.com';
+  final _get_currencies = '/currency';
+
+  static Api _instance = null;
+
+  static Api getInstance() {
+    if(_instance == null) return Api();
+    else return _instance;
+  }
+
+  get getCurrencies => _getCurrencies(_httpClient, _url, _get_currencies);
+}
+
+void _getCurrencies(HttpClient client, String url, String get_currencies) async {
+  final uri = Uri.https(url, get_currencies, {});
+  print('Uri: $uri');
+  final request = await client.getUrl(uri);
+  final response = await request.close();
+  final body = await response.transform(utf8.decoder).join();
+  print('Body: $body');
+//  if(response.statusCode != 200) return;
+//  else print(json.decode(await response.transform(utf8.decoder).join()));
+}
+
+//class Currency {
+//  final String name;
+//  final String conversion;
+//  final String description;
+//
+//  Currency(this.name, this.conversion, this.description);
+//
+//  Currency.fromJson()
+//}
 
 class Unit {
-  const Unit(this.id, this.name, this.color, this.icon, this.designations);
-
   final int id;
   final String name;
   final Color color;
   final String icon;
   final List<Designation> designations;
+  final isLocal;
+
+  const Unit(this.id, this.name, this.color, this.icon, this.designations, this.isLocal);
 }
 
 class Designation {
-  const Designation(this.id, this.title, this.conversion);
-
   final int id;
   final String title;
   final Map<String, Function> conversion;
+
+  const Designation(this.id, this.title, this.conversion);
 
   @override
   String toString() {
@@ -40,10 +80,11 @@ List<Unit> getUnits() {
   List<Designation> volumeDesignations = List();
   volumeDesignations.add(Designation(1, 'ml', {'ml': ((ml) => ml), 'L': ((ml) => ml / 1000)}));
   volumeDesignations.add(Designation(2, 'L', {'ml': ((l) => l * 1000), 'L': ((l) => l)}));
-  units.add(Unit(1, 'Length', Colors.blue, 'assets/icons/ruler.png', lengthDesignations));
-  units.add(Unit(2, 'Weight', Colors.blue, 'assets/icons/libra.png', weightDesignations));
-  units.add(Unit(3, 'Time', Colors.blue, 'assets/icons/stopwatch.png', timeDesignations));
-  units.add(Unit(4, 'Volume', Colors.blue, 'assets/icons/water.png', volumeDesignations));
+  units.add(Unit(1, 'Length', Colors.blue, 'assets/icons/ruler.png', lengthDesignations, true));
+  units.add(Unit(2, 'Weight', Colors.blue, 'assets/icons/libra.png', weightDesignations, true));
+  units.add(Unit(3, 'Time', Colors.blue, 'assets/icons/stopwatch.png', timeDesignations, true));
+  units.add(Unit(4, 'Volume', Colors.blue, 'assets/icons/water.png', volumeDesignations, true));
+  units.add(Unit(5, 'Currency', Colors.blue, 'assets/icons/currency exchange.png', null, true));
 
   return units;
 }
