@@ -5,8 +5,8 @@ import 'dart:io';
 
 class Api {
   final _httpClient = HttpClient();
-  final _url = 'flutter.udacity.com';
-  final _get_currencies = '/currency';
+  final _url = 'api.exchangeratesapi.io';
+  final _get_currencies = '/latest';
 
   static Api _instance = null;
 
@@ -24,20 +24,35 @@ void _getCurrencies(HttpClient client, String url, String get_currencies) async 
   final request = await client.getUrl(uri);
   final response = await request.close();
   final body = await response.transform(utf8.decoder).join();
-  print('Body: $body');
-//  if(response.statusCode != 200) return;
-//  else print(json.decode(await response.transform(utf8.decoder).join()));
+  if(response.statusCode != 200) return;
+  else {
+    print(body);
+  }
 }
 
-//class Currency {
-//  final String name;
-//  final String conversion;
-//  final String description;
-//
-//  Currency(this.name, this.conversion, this.description);
-//
-//  Currency.fromJson()
-//}
+class CurrencyApiResponse {
+  final String baseCurrency;
+  final String date;
+  final List<CurrencyRate> rates;
+
+  CurrencyApiResponse(this.baseCurrency, this.date, this.rates);
+
+  CurrencyApiResponse.fromJson(Map<String, dynamic> json)
+      : baseCurrency = json['base'],
+        date = json['date'],
+        rates = json['rates'];
+}
+
+class CurrencyRate {
+  final String title;
+  final String value;
+
+  CurrencyRate(this.title, this.value);
+
+  CurrencyRate.fromJson(Map<String, String> json)
+      : title = json['title'],
+        value = json['value'];
+}
 
 class Unit {
   final int id;
