@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:convert' show json, utf8;
 import 'dart:io';
 
+var rates = ['USD', 'EUR', 'GBP', 'RUB'];
+
 class Api {
   final _httpClient = HttpClient();
   final _url = 'api.exchangeratesapi.io';
@@ -19,21 +21,23 @@ class Api {
 }
 
 void _getCurrencies(HttpClient client, String url, String get_currencies) async {
-  final uri = Uri.https(url, get_currencies, {});
+  final uri = Uri.https(url, get_currencies, {'base': rates[0], 'symbols': '${rates.skip(1).join(',')}'});
   print('Uri: $uri');
   final request = await client.getUrl(uri);
   final response = await request.close();
   final body = await response.transform(utf8.decoder).join();
   if(response.statusCode != 200) return;
   else {
-    print(body);
+    for(String key in CurrencyApiResponse.fromJson(json.decode(body)).rates.keys) {
+      print('$key');
+    }
   }
 }
 
 class CurrencyApiResponse {
   final String baseCurrency;
   final String date;
-  final List<CurrencyRate> rates;
+  final Map<String, dynamic> rates;
 
   CurrencyApiResponse(this.baseCurrency, this.date, this.rates);
 
@@ -41,17 +45,6 @@ class CurrencyApiResponse {
       : baseCurrency = json['base'],
         date = json['date'],
         rates = json['rates'];
-}
-
-class CurrencyRate {
-  final String title;
-  final String value;
-
-  CurrencyRate(this.title, this.value);
-
-  CurrencyRate.fromJson(Map<String, String> json)
-      : title = json['title'],
-        value = json['value'];
 }
 
 class Unit {
