@@ -3,8 +3,6 @@ import 'dart:async';
 import 'dart:convert' show json, utf8;
 import 'dart:io';
 
-var rates = ['USD', 'EUR', 'GBP', 'RUB'];
-
 class Api {
   final _httpClient = HttpClient();
   final _url = 'api.exchangeratesapi.io';
@@ -17,20 +15,20 @@ class Api {
     else return _instance;
   }
 
-  get getCurrencies => _getCurrencies(_httpClient, _url, _get_currencies);
+  Future<double> getRate(String from, String to) => _getRate(_httpClient, _url, _get_currencies, from, to);
 }
 
-void _getCurrencies(HttpClient client, String url, String get_currencies) async {
-  final uri = Uri.https(url, get_currencies, {'base': rates[0], 'symbols': '${rates.skip(1).join(',')}'});
+Future<double> _getRate(HttpClient client, String url, String get_currencies, String from, String to) async {
+  final uri = Uri.https(url, get_currencies, {'base': from, 'symbols': to});
   print('Uri: $uri');
   final request = await client.getUrl(uri);
   final response = await request.close();
   final body = await response.transform(utf8.decoder).join();
-  if(response.statusCode != 200) return;
+  if(response.statusCode != 200) return 0;
   else {
-    for(String key in CurrencyApiResponse.fromJson(json.decode(body)).rates.keys) {
-      print('$key');
-    }
+    final CurrencyApiResponse apiResponse = CurrencyApiResponse.fromJson(json.decode(body));
+    print('Currency API rate: ${apiResponse.rates.values.elementAt(0)}');
+    return apiResponse.rates.values.elementAt(0);
   }
 }
 
@@ -88,11 +86,17 @@ List<Unit> getUnits() {
   List<Designation> volumeDesignations = List();
   volumeDesignations.add(Designation(1, 'ml', {'ml': ((ml) => ml), 'L': ((ml) => ml / 1000)}));
   volumeDesignations.add(Designation(2, 'L', {'ml': ((l) => l * 1000), 'L': ((l) => l)}));
+  List<Designation> currencyDesignations = List();
+  currencyDesignations.add(Designation(1, "USD", null));
+  currencyDesignations.add(Designation(2, "EUR", null));
+  currencyDesignations.add(Designation(3, "GBP", null));
+  currencyDesignations.add(Designation(4, "RUB", null));
+
   units.add(Unit(1, 'Length', Colors.blue, 'assets/icons/ruler.png', lengthDesignations, true));
   units.add(Unit(2, 'Weight', Colors.blue, 'assets/icons/libra.png', weightDesignations, true));
   units.add(Unit(3, 'Time', Colors.blue, 'assets/icons/stopwatch.png', timeDesignations, true));
   units.add(Unit(4, 'Volume', Colors.blue, 'assets/icons/water.png', volumeDesignations, true));
-  units.add(Unit(5, 'Currency', Colors.blue, 'assets/icons/currency exchange.png', null, true));
+  units.add(Unit(5, 'Currency', Colors.blue, 'assets/icons/currency exchange.png', currencyDesignations, true));
 
   return units;
 }

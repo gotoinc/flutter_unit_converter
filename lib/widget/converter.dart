@@ -14,13 +14,13 @@ calculateResult(bool isInput, num inputtedValue) {
   if (inputtedValue != 0)
     isInput
         ? inputDesignation.conversion.forEach((key, f) =>
-            key == outputDesignation.title
-                ? result = f(inputtedValue).toStringAsFixed(2)
-                : '')
+    key == outputDesignation.title
+        ? result = f(inputtedValue).toStringAsFixed(2)
+        : '')
         : outputDesignation.conversion.forEach((key, f) =>
-            key == inputDesignation.title
-                ? result = f(inputtedValue).toStringAsFixed(2)
-                : '');
+    key == inputDesignation.title
+        ? result = f(inputtedValue).toStringAsFixed(2)
+        : '');
   print('Result: $result');
   return result;
 }
@@ -39,43 +39,54 @@ class UnitConverterGroup extends StatelessWidget {
 
     inputWidget = InputSection((newText) {
       print('Input text: $newText');
-      outputWidget
-          .setTextToTextField(calculateResult(true, num.parse(newText)));
+      if(inputDesignation.conversion != null) {
+        outputWidget
+            .setTextToTextField(calculateResult(true, num.parse(newText)));
+      } else {
+        Api.getInstance().getRate(inputDesignation.title, outputDesignation.title).then((rate) =>
+            outputWidget.setTextToTextField((num.parse(newText) * rate).toStringAsFixed(2)));
+      }
     }, (d, currentText, refresh) {
       print('Input designation: $currentText - ${d != null ? d.title : null} - $refresh');
       inputDesignation = d;
       if (refresh)
-        outputWidget
-            .setTextToTextField(calculateResult(true, num.parse(currentText)));
+        if(inputDesignation.conversion != null) {
+          outputWidget
+              .setTextToTextField(
+              calculateResult(true, num.parse(currentText)));
+        } else {
+          Api.getInstance().getRate(inputDesignation.title, outputDesignation.title).then((rate) =>
+              outputWidget.setTextToTextField((num.parse(currentText) * rate).toStringAsFixed(2)));
+        }
     }, _designations, inputDesignation);
     outputWidget = InputSection((newText) {
-      inputWidget
-          .setTextToTextField(calculateResult(false, num.parse(newText)));
+      print('Output text: $newText');
+      if(outputDesignation.conversion != null) {
+        inputWidget.setTextToTextField(calculateResult(false, num.parse(newText)));
+      } else {
+        Api.getInstance().getRate(outputDesignation.title, inputDesignation.title).then((rate) =>
+            inputWidget.setTextToTextField((num.parse(newText) * rate).toStringAsFixed(2)));
+      }
     }, (d, currentText, refresh) {
       print('Output designation: $currentText - ${d != null ? d.title : null} - $refresh');
       outputDesignation = d;
       if (refresh)
-        inputWidget
-            .setTextToTextField(calculateResult(false, num.parse(currentText)));
+        if(outputDesignation.conversion != null) {
+          inputWidget.setTextToTextField(calculateResult(false, num.parse(currentText)));
+        } else {
+          Api.getInstance().getRate(outputDesignation.title, inputDesignation.title).then((rate) =>
+              inputWidget.setTextToTextField((num.parse(currentText) * rate).toStringAsFixed(2)));
+        }
     }, _designations, outputDesignation);
     changeButton = ChangeButton(false);
   }
 
   void setData(List<Designation> data) {
     _designations = data;
-    if (data != null) {
-      changeButton.isLoading = false;
-      inputWidget.setData(data, data.elementAt(0), false);
-      outputWidget.setData(data, data.elementAt(1), false);
-      inputWidget.triggerInputEvent();
-      print('Data was changed');
-    } else {
-      print('Need to load data from API');
-      changeButton.isLoading = true;
-      inputWidget.setData(data, null, false);
-      outputWidget.setData(data, null, false);
-      Api.getInstance().getCurrencies;
-    }
+    changeButton.isLoading = false;
+    inputWidget.setData(data, data.elementAt(0), false);
+    outputWidget.setData(data, data.elementAt(1), false);
+    inputWidget.triggerInputEvent();
   }
 
   @override
